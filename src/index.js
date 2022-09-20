@@ -1,13 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "@coreui/coreui/dist/css/coreui.min.css";
+import "./styles/volt.css";
+import "react-datetime/css/react-datetime.css";
+import "./styles/main.css";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Layout from "./layout";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path="*" element={<Layout />}></Route>
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
