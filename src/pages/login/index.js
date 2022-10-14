@@ -5,6 +5,13 @@ import { LogoOCBC } from "../../assets";
 import { LOGIN_USER } from "../../services/CallServiceAbsensi";
 import swal from "sweetalert";
 import PageLoading from "../../components/PageLoading";
+import { Input, Space } from "antd";
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LockOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const Login = () => {
   const [stateAuth, setStateAuth] = useState({
@@ -93,33 +100,36 @@ const Login = () => {
                 </div>
                 <h3>Welcome Back</h3>
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label className="control-label">Username</label>
-                    <input
-                      className="form-control"
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <Input
+                      size="large"
+                      placeholder="Username"
                       type="text"
                       name="username"
                       onChange={handleChange}
+                      prefix={<UserOutlined />}
                     />
-                  </div>
-                  <div className="mb-3">
-                    <label className="control-label">Password</label>
-                    <input
-                      className="form-control"
+                    <Input.Password
+                      placeholder="Password"
+                      size="large"
+                      iconRender={(visible) =>
+                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                      }
                       type="password"
                       name="password"
                       onChange={handleChange}
+                      prefix={<LockOutlined />}
                     />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn w-100 btn-danger"
-                    id="btn-login"
-                    disabled={!disabledButton()}
-                  >
-                    SIGN IN
-                  </button>
+                    <button
+                      type="submit"
+                      className="btn w-100 btn-danger mt-2"
+                      style={{ borderRadius: "2px" }}
+                      id="btn-login"
+                      disabled={!disabledButton()}
+                    >
+                      SIGN IN
+                    </button>
+                  </Space>
                 </form>
               </div>
             </div>

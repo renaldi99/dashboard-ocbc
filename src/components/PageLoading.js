@@ -27,7 +27,11 @@ const PageLoading = () => {
         <Spin
           indicator={
             <Loading3QuartersOutlined
-              style={{ fontSize: 60, marginBottom: "20px", color: "#fff" }}
+              style={{
+                fontSize: 60,
+                marginBottom: "20px",
+                color: "#fff",
+              }}
               spin
             />
           }
