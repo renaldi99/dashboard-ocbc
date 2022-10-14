@@ -1,4 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap");
+// Bootstrap mixins and functions
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/functions";
+
+// Change variables here
+@import "volt/variables";
+
+// Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Vendor
+@import "volt/vendor";
+
+// volt mixins & functions
+@import "volt/mixins";
+@import "volt/functions";
+
+// Utilities
+@import "volt/reboot";
+@import "volt/utilities";
+
+// Layout
+@import "volt/layout";
+
+// Components
+@import "volt/components";
 
 * {
   -ms-overflow-style: none;
@@ -15,6 +41,7 @@
   font-family: "Assistant", sans-serif;
   background-color: #f2f4f6;
   color: #130f40;
+  overflow-x: hidden;
 }
 
 .sidebar-content {
@@ -38,26 +65,25 @@
   }
 
   .navbar-nav {
-    padding: 10px;
+    padding: 10px 0;
     .nav-item {
       padding: 10px 12px;
 
-      &.actives {
-        background-color: #e74c3c;
-        border-radius: 4px;
-        a {
-          color: #fff !important;
-          display: flex;
-          align-items: center;
-          flex-direction: row;
-          font-weight: 700;
-        }
-      }
       a {
-        font-size: 16px;
+        font-size: 14px;
         text-decoration: none;
         color: #e74c3c;
         font-weight: 400;
+      }
+
+      &.actives {
+        background-color: rgb(255, 226, 223);
+        a {
+          color: #e74c3c !important;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+        }
       }
     }
   }
@@ -69,10 +95,17 @@
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   min-height: 100vh;
 
+  .main-content {
+    padding: 0 20px 50px;
+  }
+
   .navbar {
     background-color: #f2f4f6;
     padding: 15px 20px;
     width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 500;
 
     // .search-container {
     //   width: 320px;
@@ -146,8 +179,6 @@
 }
 
 .dashboard {
-  padding: 0 20px 50px;
-
   .field-dashboard {
     .box-welcome {
       width: 100%;
@@ -204,13 +235,11 @@
 }
 
 .absensi {
-  padding: 0 20px 50px;
-
   .field-absensi {
     .field-abs {
       padding: 20px;
       width: 100%;
-      min-height: 480px;
+      min-height: 500px;
       border-radius: 8px;
       background-color: #fff;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
@@ -356,8 +385,6 @@
 }
 
 .log-vpn {
-  padding: 0 20px 50px;
-
   .field-vpn {
     .field-table-vpn {
       padding: 20px;
@@ -367,6 +394,14 @@
       min-height: 350px;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
         0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .btn-export-csv {
+      font-weight: 600;
+      background-color: #00b894;
+      color: #fff;
+      border: none;
+      outline: none;
     }
   }
 }
@@ -378,6 +413,20 @@
   font-family: "Poppins", sans-serif;
 
   .left-side-login {
+    background: url("../assets/images/bg-onspace.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+      background-color: #e74c3c;
+      left: 0;
+      top: 0;
+    }
   }
 
   .right-side-login {
@@ -390,6 +439,7 @@
       }
     }
   }
+
   .card-login-form {
     max-width: 300px !important;
 
@@ -445,6 +495,34 @@
   }
 }
 
+.ant-spin-dot-item {
+  background-color: #e74c3c !important;
+}
+
+.ant-pagination-item-active {
+  border-color: #e74c3c !important;
+  a {
+    color: #e74c3c !important;
+  }
+}
+
+.ant-modal-mask {
+  background-color: #636e72 !important;
+  opacity: 0.1 !important;
+}
+
+.ant-modal-content {
+  box-shadow: none;
+}
+
+.modal-absensi {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.ant-modal {
+  min-width: 800px !important;
+}
+
 .section-footer {
   padding: 14px 0;
   width: 100%;
@@ -479,11 +557,6 @@
 
   .sidebar-content {
     width: var(--side-width);
-
-    .logos {
-      .img-logos {
-      }
-    }
 
     .navbar-nav {
       padding: 20px;

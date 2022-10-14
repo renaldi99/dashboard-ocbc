@@ -6,22 +6,20 @@ import React, {
   useState,
 } from "react";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import { getAllLogVpn } from "../../services/CallServiceAbsensi";
+import { GET_LOG_VPN } from "../../services/CallServiceAbsensi";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { DatePicker, Input } from "antd";
+import moment from "moment";
 
 var filterParams = {
-  debounceMs: 500,
-  suppressAndOrCondition: true,
   comparator: (filterLocalDateAtMidnight, cellValue) => {
     var dateAsString = cellValue;
     if (dateAsString == null) return -1;
-    var dateParts = dateAsString.split("/");
+    var dateParts = dateAsString.split("-");
     var cellDate = new Date(
-      Number(dateParts[2]),
+      Number(dateParts[0]),
       Number(dateParts[1]) - 1,
-      Number(dateParts[0])
+      Number(dateParts[2])
     );
     if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
       return 0;
@@ -34,12 +32,15 @@ var filterParams = {
     }
   },
   browserDatePicker: true,
-  inRangeFloatingFilterDateFormat: "M D YYYY",
 };
 
 const btn = (props) => {
   const viewLocation = () => {
-    console.log(props.data);
+    const { latitude, longitude } = props.data;
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${latitude}%2C${longitude}`,
+      "_blank"
+    );
   };
   return (
     <button
@@ -57,26 +58,28 @@ const btn = (props) => {
 
 const Vpn = () => {
   const [rowData, setRowData] = useState();
-  const [searchNik, setSearchNik] = useState(null);
+  const [searchNik, setSearchNik] = useState("");
+  const [rangeDate, setRangeDate] = useState({
+    startDate: "",
+    endDate: "",
+  });
   const gridRef = useRef();
+  const dateFormat = "YYYY-MM-DD";
   const [columnDefs, setColumnDefs] = useState([
     {
       field: "nik",
       filterParams: {
         buttons: ["clear"],
       },
-      suppressMenu: true,
     },
     {
       field: "latitude",
-      filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["clear"],
       },
     },
     {
       field: "longitude",
-      filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["clear"],
       },
@@ -102,13 +105,12 @@ const Vpn = () => {
       sortable: true,
       flex: 1,
       minWidth: 150,
-      filter: true,
     };
   }, []);
 
   const onGridReady = async () => {
     try {
-      const res = await getAllLogVpn();
+      const res = await GET_LOG_VPN();
       setRowData(res.data);
     } catch (error) {
       throw new Error(error);
@@ -125,24 +127,25 @@ const Vpn = () => {
   }, []);
 
   const onSearchNik = useCallback(() => {
-    var nikFilterComponent = gridRef.current.api.getFilterInstance("nik");
-    if (searchNik == null) {
-      nikFilterComponent.setModel(null);
-    } else {
-      nikFilterComponent.setModel(searchNik);
+    if (searchNik !== "") {
+      var nikFilterComponent = gridRef.current.api.getFilterInstance("nik");
+      nikFilterComponent.setModel({
+        type: "startsWith",
+        filter: searchNik,
+      });
+      gridRef.current.api.onFilterChanged();
     }
-    gridRef.current.api.onFilterChanged();
   }, [searchNik]);
 
-  const beforeDate = useCallback(() => {
+  const onSearchDate = () => {
     var dateFilterComponent = gridRef.current.api.getFilterInstance("waktu");
     dateFilterComponent.setModel({
-      type: "graterThan",
-      dateFrom: "2022-09-01",
-      dateTo: null,
+      type: "inRange",
+      dateFrom: rangeDate.startDate,
+      dateTo: rangeDate.endDate,
     });
     gridRef.current.api.onFilterChanged();
-  }, []);
+  };
 
   return (
     <div className="log-vpn">
@@ -151,23 +154,50 @@ const Vpn = () => {
           <div className="row py-3">
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex">
-                <input
-                  className="form-control me-2"
-                  onChange={onSearchNik}
+                <Input
+                  className=" me-2"
+                  style={{ width: "250px" }}
+                  allowClear
+                  onChange={(e) => setSearchNik(e.target.value)}
                   value={searchNik}
                   placeholder="Masukkan Nik"
                 />
                 <div className="me-2">
-                  <input className="form-control ms-1" type="date" />
+                  <DatePicker
+                    format={dateFormat}
+                    onChange={(date, dateString) =>
+                      setRangeDate({ ...rangeDate, startDate: dateString })
+                    }
+                    placeholder="Start Date"
+                    disabledDate={(date) => date.isAfter(moment())}
+                  />
                 </div>
                 <div className="me-2">
-                  <input className="form-control ms-1" type="date" />
+                  <DatePicker
+                    format={dateFormat}
+                    onChange={(date, dateString) =>
+                      setRangeDate({ ...rangeDate, endDate: dateString })
+                    }
+                    placeholder="End Date"
+                    disabledDate={(date) => date.isBefore(rangeDate.startDate)}
+                  />
                 </div>
+                <button
+                  className="ant-btn btn-export"
+                  style={{
+                    backgroundColor: "#e74c3c",
+                    color: "#fff",
+                    border: "none",
+                  }}
+                  type="button"
+                  onClick={onSearchNik}
+                >
+                  Filter
+                </button>
               </div>
               <button
                 onClick={onBtExport}
-                style={{ fontWeight: "bold" }}
-                className="btn btn-soft-green ms-2"
+                className="ant-btn ant-btn ms-2 btn-export-csv"
                 data-placement="right"
                 title="Export CSV"
               >
@@ -187,19 +217,6 @@ const Vpn = () => {
                     }}
                     className="ag-theme-alpine"
                   >
-                    {/* <div className="example-wrapper">
-                      <div className="example-header">
-                        Page Size:
-                        <select onChange={onPageSizeChanged} id="page-size">
-                          <option value="10" selected={true}>
-                            10
-                          </option>
-                          <option value="100">100</option>
-                          <option value="500">500</option>
-                          <option value="1000">1000</option>
-                        </select>
-                      </div>
-                    </div> */}
                     <AgGridReact
                       ref={gridRef}
                       rowData={rowData}
@@ -207,6 +224,7 @@ const Vpn = () => {
                       defaultColDef={defaultColDef}
                       onGridReady={onGridReady}
                       pagination={true}
+                      sideBar={true}
                     ></AgGridReact>
                   </div>
                 </div>

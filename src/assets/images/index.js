@@ -1,12 +1,14 @@
-import ImgUser from "./user.svg";
+import IconSmallLogo from "./favicon-32x32.png";
+import IllustasiDashboard from "./illustrasi-dashboard.svg";
 import LogoOCBC from "./logo_ocbc.png";
 import LogoOCBCMedium from "./medium_logo.png";
-import IconSmallLogo from "./favicon-32x32.png";
 import MenuIcon from "./menu.svg";
-import IllustasiDashboard from "./illustrasi-dashboard.svg";
+import UserIconSvg from "./user.svg";
+import UserIconPng from "./user.png";
 
 export {
-  ImgUser,
+  UserIconSvg,
+  UserIconPng,
   LogoOCBC,
   LogoOCBCMedium,
   MenuIcon,

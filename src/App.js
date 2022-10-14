@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { Spin } from "antd";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/main/ProtectedRoute";
+import DefaultLayout from "./layout/DefaultLayout";
+import Login from "./pages/login";
+import useIsMobile from "./utils/useIsMobile";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+  if (useIsMobile()) {
+    return (
+      <>
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Spin
+            style={{ color: "#e74c3c" }}
+            tip="Please use your dekstop device"
+          />
+        </div>
+      </>
+    );
+  }
+  return (
+    <Routes>
+      <Route index element={<Login />}></Route>
+      <Route
+        path="/protected/*"
+        element={
+          <ProtectedRoute redirectTo={"/"}>
+            <DefaultLayout />
+          </ProtectedRoute>
+        }
+      ></Route>
+    </Routes>
   );
 }
 

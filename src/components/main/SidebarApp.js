@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { IconSmallLogo, LogoOCBC } from "../../assets";
-import { useScreenWidth } from "../../utils/checkscreen";
-import { _nav } from "./_nav";
+import { useScreenWidth } from "../../utils/utilsItem";
+import { _nav } from "./nav";
 
 const SidebarApp = () => {
   const [active, setActive] = useState({

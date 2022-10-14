@@ -1,162 +1,51 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBell,
-  faSearch,
-  faSignOutAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  Row,
-  Col,
-  Nav,
-  Form,
-  Image,
-  Navbar,
-  Dropdown,
-  Container,
-  ListGroup,
-  InputGroup,
-} from "react-bootstrap";
-import { MenuIcon } from "../../assets";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { Nav, Navbar, Dropdown, Container } from "react-bootstrap";
 
-import NOTIFICATIONS_DATA from "../../data/notifications";
-import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
+import { MenuIcon, UserIconPng } from "../../assets";
+import { useNavigate } from "react-router-dom";
 
-const NavbarApp = (props) => {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
-  const areNotificationsRead = notifications.reduce(
-    (acc, notif) => acc && notif.read,
-    true
-  );
+const NavbarApp = () => {
+  const navigation = useNavigate();
 
-  const markNotificationsAsRead = () => {
-    setTimeout(() => {
-      setNotifications(notifications.map((n) => ({ ...n, read: true })));
-    }, 300);
-  };
-
-  const Notification = (props) => {
-    const { link, sender, image, time, message, read = false } = props;
-    const readClassName = read ? "" : "text-danger";
-
-    return (
-      <ListGroup.Item action href={link} className="border-bottom border-light">
-        <Row className="align-items-center">
-          <Col className="col-auto">
-            <Image
-              src={image}
-              className="user-avatar lg-avatar rounded-circle"
-            />
-          </Col>
-          <Col className="ps-0 ms--2">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h4 className="h6 mb-0 text-small">{sender}</h4>
-              </div>
-              <div className="text-end">
-                <small className={readClassName}>{time}</small>
-              </div>
-            </div>
-            <p className="font-small mt-1 mb-0">{message}</p>
-          </Col>
-        </Row>
-      </ListGroup.Item>
-    );
+  const logout = () => {
+    sessionStorage.clear("token");
+    navigation("/", { replace: true });
   };
 
   return (
-    <Navbar variant="dark" expanded className="sticky-top">
+    <Navbar variant="dark" expanded>
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
           <div className="d-flex align-items-center">
             <button
               id="sidebar-toggle"
-              className="sidebar-toggle d-none d-md-inline-block align-items-center justify-content-center me-3 btn btn-icon-only btn-lg"
+              className="sidebar-toggle me-2 d-none d-md-inline-block align-items-center justify-content-center btn btn-icon-only btn-lg"
+              style={{ padding: "5px" }}
             >
-              <img src={MenuIcon} />
+              <img src={MenuIcon} width="50" />
             </button>
-            <Form className="navbar-search">
-              <Form.Group id="topbarSearch">
-                <InputGroup className="input-group-merge search-bar">
-                  <InputGroup.Text>
-                    <FontAwesomeIcon icon={faSearch} />
-                  </InputGroup.Text>
-                  <Form.Control type="text" placeholder="Search" />
-                </InputGroup>
-              </Form.Group>
-            </Form>
           </div>
           <Nav className="align-items-center">
-            <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
-              <Dropdown.Toggle
-                as={Nav.Link}
-                className="text-dark icon-notifications me-lg-3"
-              >
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon
-                    icon={faBell}
-                    color="#f36f60"
-                    className="bell-shake"
-                  />
-                  {areNotificationsRead ? null : (
-                    <span className="icon-badge rounded-circle unread-notifications" />
-                  )}
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
-                <ListGroup className="list-group-flush">
-                  <Nav.Link
-                    href="#"
-                    className="text-center text-primary fw-bold border-bottom border-light py-3"
-                  >
-                    Notifications
-                  </Nav.Link>
-
-                  {/* {notifications.map((n) => (
-                    <Notification key={`notification-${n.id}`} {...n} />
-                  ))} */}
-
-                  <Dropdown.Item className="text-center text-primary fw-bold py-3">
-                    View all
-                  </Dropdown.Item>
-                </ListGroup>
-              </Dropdown.Menu>
-            </Dropdown>
-
             <Dropdown as={Nav.Item}>
               <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">
                 <div className="media d-flex align-items-center">
-                  <Image
-                    src={Profile3}
-                    className="user-avatar md-avatar rounded-circle"
-                  />
-                  <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                    <span className="mb-0 font-small fw-bold red-font">
-                      Renaldi // 14055
+                  <div className="media-body me-2 text-dark align-items-center d-none d-lg-block">
+                    <span
+                      className="mb-0 font-small fw-bold"
+                      style={{ color: "#e74c3c" }}
+                    >
+                      Renaldi // 14562
                     </span>
                   </div>
+                  <span className="icon icon-sm">
+                    <img src={UserIconPng} width="30" />
+                  </span>
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                {/* <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My
-                  Profile
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" />{" "}
-                  Messages
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faUserShield} className="me-2" />{" "}
-                  Support
-                </Dropdown.Item>
-
-                <Dropdown.Divider /> */}
-
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item className="fw-bold" onClick={logout}>
                   <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"
